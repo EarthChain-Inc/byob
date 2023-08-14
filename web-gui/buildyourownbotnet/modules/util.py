@@ -365,7 +365,6 @@ def delete(target):
         if os.path.isfile(target):
             os.remove(target)
         elif os.path.isdir(target):
-            import shutil
             shutil.rmtree(target, ignore_errors=True)
     except OSError: pass
 
