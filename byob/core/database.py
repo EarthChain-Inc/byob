@@ -145,13 +145,15 @@ COMMIT;
     def _count_sessions(self):
         return len(self.get_sessions(verbose=False))
 
-    def debug(self, output):
+    @staticmethod
+    def debug(output):
         """
         Print debugging output to console
         """
         util.log(str(output), level='debug')
 
-    def error(self, output):
+    @staticmethod
+    def error(output):
         """
         Print error output to console
         """

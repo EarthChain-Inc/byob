@@ -36,7 +36,8 @@ class UserDAO:
             user = db.session.query(self.model).filter_by(username=username).first()
         return user
 
-    def add_user(self, username, hashed_password):
+    @staticmethod
+    def add_user(username, hashed_password):
         """
         Add user to database.
 
@@ -191,7 +192,8 @@ class TaskDAO:
         """Get task metadata from database."""
         return db.session.query(self.model).filter_by(uid=task_uid).first()
 
-    def get_session_tasks(self, session_uid):
+    @staticmethod
+    def get_session_tasks(session_uid):
         """
         Fetch tasks from databse for specified session.
 

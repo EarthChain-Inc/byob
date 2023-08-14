@@ -117,7 +117,8 @@ class C2(threading.Thread):
         except Exception as e:
             print("server.C2 failed to launch package_handler and module_handler. Exception: " + str(e))
 
-    def _init_socket(self, port):
+    @staticmethod
+    def _init_socket(port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(('0.0.0.0', port))
@@ -156,7 +157,8 @@ class C2(threading.Thread):
         """
         self.app_client = app.test_client()
 
-    def py_exec(self, code):
+    @staticmethod
+    def py_exec(code):
         """
         Execute code directly in the context of the currently running process
         using Python's built-in exec() function.
@@ -175,7 +177,8 @@ class C2(threading.Thread):
         except Exception as e:
             print(e)
 
-    def py_eval(self, code):
+    @staticmethod
+    def py_eval(code):
         """
         Evaluate code directly in the context of the currently running process
         using Python's built-in eval() function.

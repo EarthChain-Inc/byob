@@ -85,7 +85,8 @@ class Miner(multiprocessing.Process):
             except: pass
 
 
-    def pack_nonce(self, blob, nonce):
+    @staticmethod
+    def pack_nonce(blob, nonce):
         b = binascii.unhexlify(blob)
         bin = struct.pack('39B', *bytearray(b[:39]))
         bin += struct.pack('I', nonce)

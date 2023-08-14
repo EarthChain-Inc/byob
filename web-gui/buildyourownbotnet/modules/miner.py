@@ -459,6 +459,7 @@ class Subscription(object):
   '''Encapsulates the Subscription state from the JSON-RPC server'''
 
   # Subclasses should override this
+  @staticmethod
   def ProofOfWork(header):
     raise Exception('Do not use the Subscription class directly, subclass it')
 

