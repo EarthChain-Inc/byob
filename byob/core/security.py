@@ -293,7 +293,6 @@ def long_to_bytes(n, blocksize=0):
     :param long n:      long integer to convert to byte string
 
     """
-    import struct
     s = b''
     n = int(n)
     while n > 0:
@@ -318,7 +317,6 @@ def bytes_to_long(s):
     :param str s:       byte string to convert to long integer
 
     """
-    import struct
     acc = 0
     length = len(s)
     if length % 4:
