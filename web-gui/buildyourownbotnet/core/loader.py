@@ -157,7 +157,8 @@ class Loader(object):
         return is_package,final_url,source
     '''
     
-    def __fetch_compiled(self, url):
+    @staticmethod
+    def __fetch_compiled(url):
         import marshal
         module_src = None
         try:
